@@ -16,7 +16,7 @@ const Dashboard = () => {
         <p className="text-slate-500 text-sm">Aperçu général de votre activité SmartCar.</p>
       </div>
 
-      {/* Stats Grid */}
+     
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
           <div key={stat.id} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow">
@@ -31,7 +31,7 @@ const Dashboard = () => {
         ))}
       </div>
 
-      {/* Recent Activity / Layout placeholder */}
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
           <h3 className="font-bold text-slate-800 mb-4 border-b pb-2">Dernières Locations</h3>

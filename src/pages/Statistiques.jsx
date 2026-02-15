@@ -1,10 +1,10 @@
 import React from 'react';
 import { FaChartLine, FaArrowUp, FaArrowDown, FaMoneyBillWave, FaGasPump, FaCarSide } from 'react-icons/fa';
-// 1. Importi l-composants dial Recharts
+
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const Statistiques = () => {
-  // Data dial l-Graph l-kbir (Evolution Mensuelle)
+
   const lineData = [
     { name: 'Jan', revenu: 4000, depenses: 2400 },
     { name: 'Fév', revenu: 3000, depenses: 1398 },
@@ -14,7 +14,7 @@ const Statistiques = () => {
     { name: 'Juin', revenu: 2390, depenses: 3800 },
   ];
 
-  // Data dial l-Pie Chart (Répartition des Achats)
+  
   const pieData = [
     { name: 'Maintenance', value: 400 },
     { name: 'Carburant', value: 300 },
@@ -97,7 +97,7 @@ const Statistiques = () => {
           </div>
         </div>
 
-        {/* Pie Chart dial Dépenses */}
+     
         <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col">
           <h3 className="font-black text-slate-800 text-lg mb-2 tracking-tight">Répartition Achats</h3>
           <div className="h-[250px] w-full">

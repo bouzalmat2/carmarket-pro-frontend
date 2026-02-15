@@ -1,8 +1,8 @@
-import React, { useState } from 'react'; // Zadna useState hna
+import React, { useState } from 'react'; 
 import { FaUserPlus, FaUserCircle, FaEnvelope, FaPhone, FaTimes } from 'react-icons/fa';
 
 const Utilisateurs = () => {
-  // 1. State bach n-thkkmo f l-visibilité dial l-Form
+
   const [showForm, setShowForm] = useState(false);
 
   const users = [
@@ -15,7 +15,7 @@ const Utilisateurs = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-slate-800">Gestion des Utilisateurs</h1>
-        {/* 2. Zadna onClick bach n-bdlo showForm l true */}
+        
         <button 
           onClick={() => setShowForm(true)}
           className="bg-indigo-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200"
@@ -24,7 +24,7 @@ const Utilisateurs = () => {
         </button>
       </div>
 
-      {/* Grid dial les clients */}
+    
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {users.map((user) => (
           <div key={user.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
@@ -55,7 +55,7 @@ const Utilisateurs = () => {
         ))}
       </div>
 
-      {/* 3. L-Modal dial l-Formulaire */}
+
       {showForm && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl animate-in zoom-in duration-200">
@@ -67,7 +67,7 @@ const Utilisateurs = () => {
               </button>
             </div>
 
-            {/* Form Fields */}
+         
             <form className="p-6 space-y-4" onSubmit={(e) => e.preventDefault()}>
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1">Nom Complet</label>
@@ -90,7 +90,7 @@ const Utilisateurs = () => {
                 <input type="text" className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="xx xx xx xx xx" />
               </div>
 
-              {/* Buttons Actions */}
+          
               <div className="pt-4 flex gap-3">
                 <button 
                   type="button"

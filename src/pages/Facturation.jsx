@@ -5,7 +5,7 @@ const Facturation = () => {
   const [days, setDays] = useState(1);
   const [pricePerDay, setPricePerDay] = useState(250);
 
-  // Calcul automatique dial l-Total
+  
   const total = days * pricePerDay;
 
   return (
@@ -17,7 +17,7 @@ const Facturation = () => {
 
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
         <div className="grid grid-cols-1 gap-6">
-          {/* Input Prix par jour */}
+       
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2 text-blue-900">Prix de location (DH/Jour)</label>
             <input 
@@ -28,7 +28,7 @@ const Facturation = () => {
             />
           </div>
 
-          {/* Input Nombre de jours */}
+   
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2 text-blue-900">Nombre de jours</label>
             <input 
@@ -39,7 +39,7 @@ const Facturation = () => {
             />
           </div>
 
-          {/* Resultat Display */}
+   
           <div className="mt-2 p-2 bg-blue-600 rounded-2xl text-white flex justify-between items-center shadow-lg shadow-blue-200">
             <div>
               <p className="text-blue-100 text-xs uppercase font-bold tracking-widest">Total à payer</p>

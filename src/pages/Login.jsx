@@ -4,14 +4,14 @@ import { FaCarSide, FaLock, FaEnvelope } from 'react-icons/fa'; // Darouri t-ins
 const Login = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
-      {/* Card Container */}
+  
       <div className="max-w-md w-full bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl p-8 overflow-hidden relative">
         
-        {/* Glow Effect (Decoration) */}
+     
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl opacity-20"></div>
         <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-indigo-500 rounded-full blur-3xl opacity-20"></div>
 
-        {/* Logo & Header */}
+     
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-xl shadow-lg shadow-blue-500/50 mb-4 rotate-3 hover:rotate-0 transition-transform duration-300">
             <FaCarSide className="text-white text-3xl" />
@@ -20,7 +20,7 @@ const Login = () => {
           <p className="text-blue-200 text-sm mt-2">Bienvenue! Connectez-vous pour gérer votre flotte.</p>
         </div>
 
-        {/* Form */}
+        
         <form className="space-y-6">
           <div className="relative">
             <label className="text-xs font-semibold text-blue-200 uppercase tracking-wider ml-1">Email Business</label>

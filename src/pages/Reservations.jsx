@@ -21,7 +21,7 @@ const Reservations = () => {
     { id: 2, clientName: 'wassim zaait', vehicleModel: 'BMW M5 (G90)', startDate: '2026-02-10', endDate: '2026-02-15', status: 'READY', totalPrice: 7500 },
   ]);
 
-  // Status Colors based on Enum
+
   const statusColors = {
     REQUESTED: 'bg-amber-100 text-amber-700',
     READY: 'bg-blue-100 text-blue-700',

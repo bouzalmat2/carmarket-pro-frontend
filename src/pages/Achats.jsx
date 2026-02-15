@@ -5,7 +5,7 @@ const Achats = () => {
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // 1. Data m-aligné m3a Purchase f UML
+  
   const [purchases] = useState([
     { 
       id: 1, 
@@ -13,8 +13,8 @@ const Achats = () => {
       objet: 'Vidange Dacia', 
       price: 600, 
       purchaseDate: '2026-01-20', 
-      paymentStatus: 'PAID', // Enum PaymentStatus
-      purchaseStatus: 'DELIVERED', // Enum PurchaseStatus
+      paymentStatus: 'PAID', 
+      purchaseStatus: 'DELIVERED',
       vehicleModel: 'Dacia Logan',
       icon: <FaTools /> 
     },
@@ -31,7 +31,7 @@ const Achats = () => {
     },
   ]);
 
-  // Logic calcul automatique
+ 
   const totalDepenses = purchases.reduce((acc, curr) => acc + curr.price, 0);
 
   const filteredPurchases = purchases.filter(item => 
@@ -39,7 +39,7 @@ const Achats = () => {
     item.vehicleModel.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Status Badge Colors
+  
   const getStatusColor = (status) => {
     const colors = {
       PAID: 'bg-emerald-100 text-emerald-700',
@@ -53,7 +53,7 @@ const Achats = () => {
 
   return (
     <div className="space-y-6 p-4">
-      {/* Header & Stats Bar */}
+     
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
         <div>
           <h1 className="text-2xl font-black text-slate-800 tracking-tight">Gestion des Achats</h1>
@@ -71,7 +71,7 @@ const Achats = () => {
         </div>
       </div>
 
-      {/* Action Bar */}
+      
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
         <div className="relative w-full sm:w-96 text-sm">
           <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -91,7 +91,7 @@ const Achats = () => {
         </button>
       </div>
 
-      {/* Purchases List */}
+    
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredPurchases.map((item) => (
           <div key={item.id} className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all group relative">
@@ -123,7 +123,7 @@ const Achats = () => {
         ))}
       </div>
 
-      {/* Modal Form */}
+     
       {showForm && (
         <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
           <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden text-sm">
