@@ -62,10 +62,10 @@ src/
  ## Instalation
  ```
 #  Clonez le dépôt
-git clone https://github.com/votre-username/votre-repo-name.git
+git clone https://github.com/bouzalmat2/carmarket-pro-frontend.git
 
 #  Accédez au dossier du projet
-cd carmarketpro-ui
+cd carmarket-pro-frontend
 
 #  Installez les dépendances
 npm install
