@@ -13,6 +13,7 @@ const Vehicules = () => {
   // --- STATE pour la prédiction IA ---
   const [isPredicting, setIsPredicting] = useState(false);
   const [predictionResult, setPredictionResult] = useState(null);
+  const [predictionError, setPredictionError] = useState(null);
 
   // --- Formulaire aligné sur VehicleRequestDTO ---
   const initialFormData = {
@@ -71,6 +72,7 @@ const Vehicules = () => {
       drive_type: 'FWD',
     });
     setPredictionResult(null);
+    setPredictionError(null);
     setShowForm(true);
   };
 
@@ -92,6 +94,7 @@ const Vehicules = () => {
       setEditingCar(null);
       setFormData(initialFormData);
       setPredictionResult(null);
+      setPredictionError(null);
       fetchVehicles(); // Recharger la liste
     } catch (err) {
       alert(err.response?.data?.message || `Erreur lors de la ${editingCar ? 'modification' : 'création'} du véhicule`);
@@ -111,30 +114,70 @@ const Vehicules = () => {
     }
   };
 
-  // --- Prédiction IA ---
+  // --- Vérifier les champs requis pour la prédiction ---
+  const validatePredictionFields = () => {
+    const missingFields = [];
+    
+    if (!formData.brand || formData.brand.trim() === '') missingFields.push('Marque');
+    if (!formData.model || formData.model.trim() === '') missingFields.push('Modèle');
+    if (!formData.year || formData.year <= 0) missingFields.push('Année');
+    if (formData.kilometrage === null || formData.kilometrage === undefined || formData.kilometrage < 0) missingFields.push('Kilométrage');
+    if (!formData.engine_size || formData.engine_size <= 0) missingFields.push('Cylindrée (Engine Size)');
+    if (!formData.fuelType) missingFields.push('Carburant');
+    if (!formData.transmission) missingFields.push('Transmission');
+    if (!formData.car_type) missingFields.push('Type de Carrosserie');
+    if (!formData.drive_type) missingFields.push('Type de Traction');
+    
+    return missingFields;
+  };
+
+  // --- Prédiction IA via Spring Boot ---
   const handleAIPrediction = async () => {
+    // Vérifier les champs requis avant l'appel
+    const missingFields = validatePredictionFields();
+    if (missingFields.length > 0) {
+      setPredictionError(`Veuillez remplir les champs suivants avant de lancer l'estimation : ${missingFields.join(', ')}`);
+      setPredictionResult(null);
+      return;
+    }
+
     setIsPredicting(true);
+    setPredictionError(null);
+    
     try {
-      const response = await fetch('http://localhost:8000/predict', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          brand: formData.brand,
-          model: formData.model,
-          year: formData.year,
-          engine_size: formData.engine_size,
-          fuel_type: formData.fuelType,
-          transmission: formData.transmission,
-          mileage: formData.kilometrage,
-          car_type: formData.car_type,
-          drive_type: formData.drive_type,
-        }),
+      const response = await apiRequest.post('/predictions', {
+        brand: formData.brand,
+        model: formData.model,
+        year: formData.year,
+        engineSize: formData.engine_size,
+        fuelType: formData.fuelType,
+        transmission: formData.transmission,
+        kilometrage: formData.kilometrage,
+        carType: formData.car_type,
+        driveType: formData.drive_type,
       });
-      const data = await response.json();
-      setPredictionResult(data.estimated_price_usd);
+      setPredictionResult(response.data.predictedPrice);
+      setPredictionError(null);
     } catch (error) {
       console.error("Erreur prediction:", error);
-      alert("Erreur de connexion avec le serveur AI");
+      const errorMessage = error.response?.data?.message || error.message || "Erreur de connexion avec le serveur de prédiction";
+      
+      // Extraire les détails d'erreur de validation si disponibles
+      if (error.response?.data) {
+        const errorData = error.response.data;
+        if (errorData.errors) {
+          // Erreurs de validation Spring Boot
+          const validationErrors = Object.entries(errorData.errors)
+            .map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
+            .join('; ');
+          setPredictionError(`Erreurs de validation : ${validationErrors}`);
+        } else {
+          setPredictionError(errorMessage);
+        }
+      } else {
+        setPredictionError(errorMessage);
+      }
+      setPredictionResult(null);
     } finally {
       setIsPredicting(false);
     }
@@ -151,7 +194,7 @@ const Vehicules = () => {
             <p className="text-[#A3AED0] font-bold text-sm">Gérez votre flotte et estimez les prix avec l'IA.</p>
           </div>
           <button 
-            onClick={() => { setEditingCar(null); setFormData(initialFormData); setPredictionResult(null); setShowForm(true); }}
+            onClick={() => { setEditingCar(null); setFormData(initialFormData); setPredictionResult(null); setPredictionError(null); setShowForm(true); }}
             className="bg-[#05CD99] text-white px-8 py-4 rounded-2xl flex items-center gap-3 hover:shadow-lg transition-all font-black uppercase text-xs tracking-widest"
           >
             <FaPlus /> Ajouter un véhicule
@@ -260,7 +303,7 @@ const Vehicules = () => {
                 </div>
                 <h3 className="text-xl font-black text-[#1B2559]">{editingCar ? 'Modifier le Véhicule' : 'Nouveau Véhicule'}</h3>
               </div>
-              <button onClick={() => { setShowForm(false); setEditingCar(null); setFormData(initialFormData); setPredictionResult(null); }} className="text-slate-400 hover:text-rose-500 transition-colors"><FaTimes size={20}/></button>
+              <button onClick={() => { setShowForm(false); setEditingCar(null); setFormData(initialFormData); setPredictionResult(null); setPredictionError(null); }} className="text-slate-400 hover:text-rose-500 transition-colors"><FaTimes size={20}/></button>
             </div>
 
             <form className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" onSubmit={handleSubmit}>
@@ -371,26 +414,63 @@ const Vehicules = () => {
               </div>
 
               {/* AI PREDICTION RESULT BLOCK */}
-              <div className="col-span-1 md:col-span-2 lg:col-span-3 bg-[#4318FF]/5 p-6 rounded-[2rem] border-2 border-dashed border-[#4318FF]/20 flex flex-col md:flex-row items-center justify-between gap-4 mt-2">
-                <div className="text-left">
-                  <h4 className="text-sm font-black text-[#1B2559]">Estimation Marchande par Intelligence Artificielle</h4>
-                  <p className="text-[10px] text-[#A3AED0] font-bold uppercase tracking-tight">Utilise Engine, Transmission, Mileage & Drive.</p>
-                </div>
-                
-                {predictionResult ? (
-                  <div className="bg-white px-8 py-3 rounded-2xl shadow-sm border-2 border-[#05CD99]">
-                    <span className="text-[10px] font-black text-[#A3AED0] uppercase block text-center">Valeur Suggérée</span>
-                    <span className="text-2xl font-black text-[#05CD99]">{predictionResult.toLocaleString()} USD</span>
+              <div className="col-span-1 md:col-span-2 lg:col-span-3 bg-[#4318FF]/5 p-6 rounded-[2rem] border-2 border-dashed border-[#4318FF]/20 flex flex-col gap-4 mt-2">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div className="text-left">
+                    <h4 className="text-sm font-black text-[#1B2559]">Estimation Marchande par Intelligence Artificielle</h4>
+                    <p className="text-[10px] text-[#A3AED0] font-bold uppercase tracking-tight">Utilise Engine, Transmission, Mileage & Drive.</p>
                   </div>
-                ) : (
-                  <button 
-                    type="button"
-                    onClick={handleAIPrediction}
-                    disabled={isPredicting}
-                    className="bg-[#4318FF] text-white px-10 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-[#3311CC] transition-all flex items-center gap-3 shadow-lg shadow-[#4318FF]/20"
-                  >
-                    {isPredicting ? "Analyse en cours..." : <><FaBrain size={16}/> Calculer le prix</>}
-                  </button>
+                  
+                  {predictionResult ? (
+                    <div className="bg-white px-8 py-3 rounded-2xl shadow-sm border-2 border-[#05CD99]">
+                      <span className="text-[10px] font-black text-[#A3AED0] uppercase block text-center">Valeur Suggérée</span>
+                      <span className="text-2xl font-black text-[#05CD99]">{predictionResult.toLocaleString()} USD</span>
+                    </div>
+                  ) : (
+                    <button 
+                      type="button"
+                      onClick={handleAIPrediction}
+                      disabled={isPredicting}
+                      className="bg-[#4318FF] text-white px-10 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-[#3311CC] transition-all flex items-center gap-3 shadow-lg shadow-[#4318FF]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isPredicting ? "Analyse en cours..." : <><FaBrain size={16}/> Calculer le prix</>}
+                    </button>
+                  )}
+                </div>
+
+                {/* Message d'erreur de prédiction */}
+                {predictionError && (
+                  <div className="bg-rose-50 border-2 border-rose-200 rounded-xl p-4 flex items-start gap-3">
+                    <FaExclamationCircle className="text-rose-500 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-rose-700 mb-1">Erreur lors de l'estimation</p>
+                      <p className="text-xs text-rose-600">{predictionError}</p>
+                      <button
+                        type="button"
+                        onClick={() => setPredictionError(null)}
+                        className="mt-2 text-xs text-rose-600 hover:text-rose-800 font-semibold underline"
+                      >
+                        Fermer
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Message de succès avec possibilité de relancer */}
+                {predictionResult && (
+                  <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                    <span className="text-xs font-bold text-emerald-700">Estimation calculée avec succès</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPredictionResult(null);
+                        setPredictionError(null);
+                      }}
+                      className="text-xs text-emerald-600 hover:text-emerald-800 font-semibold underline"
+                    >
+                      Recalculer
+                    </button>
+                  </div>
                 )}
               </div>
 
@@ -398,7 +478,7 @@ const Vehicules = () => {
               <div className="col-span-1 md:col-span-2 lg:col-span-3 pt-6 flex gap-4">
                 <button 
                   type="button" 
-                  onClick={() => { setShowForm(false); setEditingCar(null); setFormData(initialFormData); setPredictionResult(null); }} 
+                  onClick={() => { setShowForm(false); setEditingCar(null); setFormData(initialFormData); setPredictionResult(null); setPredictionError(null); }} 
                   className="flex-1 py-4 text-[#A3AED0] font-black uppercase text-[10px]"
                 >
                   Annuler
