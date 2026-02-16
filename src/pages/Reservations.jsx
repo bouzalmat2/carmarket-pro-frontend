@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaCalendarPlus, FaUser, FaClock, FaTrash, FaTimes, FaCheckCircle, FaUndo, FaBan } from 'react-icons/fa';
+import apiRequest from '../lib/apiRequest';
+
 
 const Reservations = () => {
   const [bookings, setBookings] = useState([]);
@@ -9,9 +11,8 @@ const Reservations = () => {
 
   const fetchReservations = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/reservations');
-      if (!response.ok) throw new Error('Erreur de chargement');
-      const data = await response.json();
+      const response = await apiRequest.get('/reservations');
+      const data = response.data;
       setBookings(data);
     } catch (err) {
       setError(err.message);
@@ -29,25 +30,25 @@ const Reservations = () => {
   const handleAccept = async (id) => {
     if (!window.confirm("Accepter cette réservation ?")) return;
     try {
-      const response = await fetch(`http://localhost:8080/api/reservations/${id}/accept`, { method: 'PUT' });
-      if (response.ok) fetchReservations(); 
-    } catch (err) { alert("Erreur lors de l'acceptation"); }
+      await apiRequest.put(`/reservations/${id}/accept`);
+      fetchReservations(); 
+    } catch (err) { alert(err.response?.data?.message || "Erreur lors de l'acceptation"); }
   };
 
   const handleReturn = async (id) => {
     if (!window.confirm("Marquer comme retournée ? (Libère le véhicule)")) return;
     try {
-      const response = await fetch(`http://localhost:8080/api/reservations/${id}/return`, { method: 'PUT' });
-      if (response.ok) fetchReservations();
-    } catch (err) { alert("Erreur lors du retour"); }
+      await apiRequest.put(`/reservations/${id}/return`);
+      fetchReservations();
+    } catch (err) { alert(err.response?.data?.message || "Erreur lors du retour"); }
   };
 
   const handleCancel = async (id) => {
     if (!window.confirm("Annuler cette réservation ?")) return;
     try {
-      const response = await fetch(`http://localhost:8080/api/reservations/${id}/cancel`, { method: 'PUT' });
-      if (response.ok) fetchReservations();
-    } catch (err) { alert("Erreur lors de l'annulation"); }
+      await apiRequest.put(`/reservations/${id}/cancel`);
+      fetchReservations();
+    } catch (err) { alert(err.response?.data?.message || "Erreur lors de l'annulation"); }
   };
 
   const statusColors = {
@@ -113,19 +114,19 @@ const Reservations = () => {
                  
                     {booking.status === 'REQUESTED' && (
                       <button onClick={() => handleAccept(booking.id)} className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg title='Accepter'">
-                        <FaCheckCircle size={16} />
+                        Accepter
                       </button>
                     )}
 
                     {(booking.status === 'IN_PROGRESS' || booking.status === 'LATE') && (
                       <button onClick={() => handleReturn(booking.id)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg title='Marquer Retour'">
-                        <FaUndo size={16} />
+                        Retourner
                       </button>
                     )}
 
                     {(booking.status === 'REQUESTED' || booking.status === 'ACCEPTED') && (
                       <button onClick={() => handleCancel(booking.id)} className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg title='Annuler'">
-                        <FaBan size={16} />
+                        Annuler
                       </button>
                     )}
                   </div>

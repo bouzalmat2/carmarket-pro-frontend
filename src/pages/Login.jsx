@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaCarSide, FaLock, FaEnvelope } from 'react-icons/fa';
 import { useNavigate, Link } from 'react-router-dom';
+import apiRequest from '../lib/apiRequest';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,36 +16,24 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }), 
-      });
+      const response = await apiRequest.post('/auth/login', { email, password });
+      const data = response.data;
 
-      if (response.ok) {
-        const data = await response.json(); 
+      // --- VÉRIFICATION DU RÔLE ---
+      if (data.role === 'ADMIN') {
+        localStorage.setItem('user', JSON.stringify({ 
+          name: data.name, 
+          role: data.role,
+          email: data.email 
+        }));
         
-        // --- VÉRIFICATION DU RÔLE ---
-        if (data.role === 'ADMIN') {
-     
-          localStorage.setItem('user', JSON.stringify({ 
-            name: data.name, 
-            role: data.role,
-            email: data.email 
-          }));
-          
-          // Redirect l-Dashboard
-          navigate('/'); 
-        } else {
-          
-          setError("Accès refusé: Réservé aux administrateurs.");
-        }
+        // Redirect l-Dashboard
+        navigate('/'); 
       } else {
-        const errorData = await response.json().catch(() => ({}));
-        setError(errorData.message || 'Email ou mot de passe incorrect');
+        setError("Accès refusé: Réservé aux administrateurs.");
       }
     } catch (err) {
-      setError('Erreur de connexion au serveur ');
+      setError(err.response?.data?.message || 'Erreur de connexion au serveur');
     } finally {
       setIsLoading(false);
     }
