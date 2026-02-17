@@ -52,7 +52,7 @@ const Statistiques = () => {
             <span className="text-emerald-500 font-black text-xs bg-emerald-50 px-2 py-1 rounded-lg">+{stats.croissance}</span>
           </div>
           <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest">Revenu Mensuel</p>
-          <p className="text-2xl font-black text-slate-800">{stats.revenuTotal.toLocaleString()} DH</p>
+          <p className="text-2xl font-black text-slate-800">{stats.revenuTotal.toLocaleString()} $</p>
         </div>
 
         <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
@@ -61,12 +61,12 @@ const Statistiques = () => {
             <span className="text-rose-500 font-black text-xs bg-rose-50 px-2 py-1 rounded-lg">-5%</span>
           </div>
           <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest">Dépenses Totales</p>
-          <p className="text-2xl font-black text-slate-800">{stats.depensesTotale.toLocaleString()} DH</p>
+          <p className="text-2xl font-black text-slate-800">{stats.depensesTotale.toLocaleString()} $</p>
         </div>
 
         <div className="bg-indigo-600 p-6 rounded-[2rem] shadow-xl shadow-indigo-100 text-white flex flex-col justify-center">
           <p className="text-indigo-100 font-bold text-[10px] uppercase tracking-widest mb-1">Profit Net</p>
-          <p className="text-3xl font-black">{stats.profitNet.toLocaleString()} DH</p>
+          <p className="text-3xl font-black">{stats.profitNet.toLocaleString()} $</p>
           <div className="mt-2 h-1 w-full bg-white/20 rounded-full overflow-hidden">
             <div className="h-full bg-white w-[75%]"></div>
           </div>
@@ -119,7 +119,7 @@ const Statistiques = () => {
                   <div className="w-2 h-2 rounded-full" style={{backgroundColor: COLORS[i]}}></div>
                   <span className="text-slate-500">{item.name}</span>
                 </div>
-                <span className="text-slate-800">{item.value} DH</span>
+                <span className="text-slate-800">{item.value} $</span>
               </div>
             ))}
           </div>

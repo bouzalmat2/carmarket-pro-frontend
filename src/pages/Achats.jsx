@@ -47,16 +47,36 @@ const Achats = () => {
     }
   };
 
+  // Helper functions pour extraire les données du nouveau format DTO
+  const getUserName = (item) => {
+    return item.user?.name || item.userName || 'N/A';
+  };
+
+  const getVehicleBrand = (item) => {
+    return item.vehicle?.brand || item.vehicleBrand || 'N/A';
+  };
+
+  const getVehicleModel = (item) => {
+    return item.vehicle?.model || item.vehicleModel || 'N/A';
+  };
+
+  const getVehicleId = (item) => {
+    return item.vehicle?.id || item.vehicleId || 'N/A';
+  };
+
   // --- Calculer le total des dépenses ---
-  const totalDepenses = purchases.reduce((acc, curr) => acc + curr.price, 0);
+  const totalDepenses = purchases.reduce((acc, curr) => acc + (curr.price || 0), 0);
 
   // --- Filtrer les achats ---
   const filteredPurchases = purchases.filter(item => {
     const q = searchTerm.toLowerCase();
+    const userName = getUserName(item).toLowerCase();
+    const vehicleBrand = getVehicleBrand(item).toLowerCase();
+    const vehicleModel = getVehicleModel(item).toLowerCase();
     return (
-      item.vehicleBrand?.toLowerCase().includes(q) ||
-      item.vehicleModel?.toLowerCase().includes(q) ||
-      item.userName?.toLowerCase().includes(q)
+      vehicleBrand.includes(q) ||
+      vehicleModel.includes(q) ||
+      userName.includes(q)
     );
   });
 
@@ -94,7 +114,7 @@ const Achats = () => {
           </div>
           <div>
             <p className="text-xs font-bold text-emerald-700 uppercase tracking-widest">Total Dépensé</p>
-            <p className="text-2xl font-black text-emerald-900">{totalDepenses.toLocaleString()} DH</p>
+            <p className="text-2xl font-black text-emerald-900">{totalDepenses.toLocaleString()} $</p>
           </div>
         </div>
       </div>
@@ -143,10 +163,10 @@ const Achats = () => {
             {/* Informations véhicule */}
             <div className="mb-4">
               <h3 className="font-bold text-slate-800 text-lg mb-1">
-                {item.vehicleBrand} {item.vehicleModel}
+                {getVehicleBrand(item)} {getVehicleModel(item)}
               </h3>
               <p className="text-slate-400 text-[10px] font-bold flex items-center gap-1 uppercase">
-                <FaCar className="text-emerald-500" /> Véhicule #{item.vehicleId}
+                <FaCar className="text-emerald-500" /> Véhicule #{getVehicleId(item)}
               </p>
             </div>
 
@@ -155,7 +175,7 @@ const Achats = () => {
               <p className="text-slate-400 text-[10px] font-bold flex items-center gap-1 uppercase mb-1">
                 <FaUser className="text-blue-500" /> Client
               </p>
-              <p className="text-sm font-semibold text-slate-700">{item.userName}</p>
+              <p className="text-sm font-semibold text-slate-700">{getUserName(item)}</p>
             </div>
 
             {/* Date et prix */}
@@ -164,7 +184,7 @@ const Achats = () => {
                 <p className="text-[10px] text-slate-300 font-bold uppercase tracking-widest">Date Achat</p>
                 <p className="text-xs font-black text-slate-600">{formatDate(item.purchaseDate)}</p>
               </div>
-              <span className="text-2xl font-black text-emerald-600 tracking-tighter">{item.price?.toLocaleString()} DH</span>
+              <span className="text-2xl font-black text-emerald-600 tracking-tighter">{item.price?.toLocaleString()} $</span>
             </div>
 
             {/* Actions Admin selon le statut */}

@@ -51,6 +51,19 @@ const Reservations = () => {
     } catch (err) { alert(err.response?.data?.message || "Erreur lors de l'annulation"); }
   };
 
+  // Helper functions pour extraire les données du nouveau format DTO
+  const getUserName = (booking) => {
+    return booking.user?.name || booking.userName || 'N/A';
+  };
+
+  const getVehicleBrand = (booking) => {
+    return booking.vehicle?.brand || booking.vehicleBrand || 'N/A';
+  };
+
+  const getVehicleModel = (booking) => {
+    return booking.vehicle?.model || booking.vehicleModel || 'N/A';
+  };
+
   const statusColors = {
     REQUESTED: 'bg-amber-100 text-amber-700',
     ACCEPTED: 'bg-blue-100 text-blue-700', 
@@ -89,10 +102,10 @@ const Reservations = () => {
                 <td className="px-6 py-4">
                   <div className="flex flex-col">
                     <span className="font-bold text-slate-700 flex items-center gap-2">
-                      <FaUser className="text-blue-400 text-[10px]" /> {booking.userName}
+                      <FaUser className="text-blue-400 text-[10px]" /> {getUserName(booking)}
                     </span>
                     <span className="text-[10px] text-slate-400 font-medium italic">
-                      {booking.vehicleBrand} {booking.vehicleModel}
+                      {getVehicleBrand(booking)} {getVehicleModel(booking)}
                     </span>
                   </div>
                 </td>
@@ -101,7 +114,7 @@ const Reservations = () => {
                     <div className="flex items-center gap-2 text-slate-500 font-bold text-[11px]">
                       <FaClock className="text-blue-300" /> {booking.startDate} <span className="text-slate-300">→</span> {booking.endDate}
                     </div>
-                    <span className="text-indigo-600 font-black text-xs italic">{booking.totalPrice} DH</span>
+                    <span className="text-indigo-600 font-black text-xs italic">{booking.totalPrice} $</span>
                   </div>
                 </td>
                 <td className="px-6 py-4 text-center">

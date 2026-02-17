@@ -19,7 +19,7 @@ const Facturation = () => {
         <div className="grid grid-cols-1 gap-6">
        
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2 text-blue-900">Prix de location (DH/Jour)</label>
+            <label className="block text-sm font-semibold text-slate-700 mb-2 text-blue-900">Prix de location ($/Jour)</label>
             <input 
               type="number" 
               value={pricePerDay}
@@ -43,7 +43,7 @@ const Facturation = () => {
           <div className="mt-2 p-2 bg-blue-600 rounded-2xl text-white flex justify-between items-center shadow-lg shadow-blue-200">
             <div>
               <p className="text-blue-100 text-xs uppercase font-bold tracking-widest">Total à payer</p>
-              <p className="text-3xl font-black">{total} DH</p>
+              <p className="text-3xl font-black">{total} $</p>
             </div>
             <FaCalculator className="text-4xl opacity-20" />
           </div>

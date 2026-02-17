@@ -268,7 +268,7 @@ const Vehicules = () => {
                 <span className="flex items-center gap-1"><FaGasPump /> {car.fuelType}</span>
               </div>
               <div className="flex items-center justify-between pt-4 border-t border-slate-50">
-                <span className="text-2xl font-black text-[#05CD99] tracking-tighter">{car.price?.toLocaleString()} DH</span>
+                <span className="text-2xl font-black text-[#05CD99] tracking-tighter">{car.price?.toLocaleString()} $</span>
                 <div className="flex gap-2">
                   <button 
                     onClick={() => handleEdit(car)}
@@ -351,7 +351,7 @@ const Vehicules = () => {
 
               {/* PRICE */}
               <div className="space-y-1">
-                <label className="text-[10px] font-black text-[#A3AED0] uppercase ml-1 tracking-widest">Prix (DH) *</label>
+                <label className="text-[10px] font-black text-[#A3AED0] uppercase ml-1 tracking-widest">Prix ($) *</label>
                 <input type="number" required value={formData.price} onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})} className="w-full px-5 py-4 bg-[#F4F7FE] rounded-2xl font-bold text-[#1B2559] outline-none" placeholder="Ex: 250000" />
               </div>
 

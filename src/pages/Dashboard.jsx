@@ -5,7 +5,7 @@ const Dashboard = () => {
   const stats = [
     { id: 1, label: 'Véhicules Totaux', value: '24', icon: <FaCar />, color: 'bg-blue-500' },
     { id: 2, label: 'Clients Actifs', value: '156', icon: <FaUsers />, color: 'bg-indigo-500' },
-    { id: 3, label: 'Revenu Mensuel', value: '45,000 DH', icon: <FaMoneyBillWave />, color: 'bg-green-500' },
+    { id: 3, label: 'Revenu Mensuel', value: '45,000 $', icon: <FaMoneyBillWave />, color: 'bg-green-500' },
     { id: 4, label: 'Locations en cours', value: '8', icon: <FaCalendarCheck />, color: 'bg-amber-500' },
   ];
 
